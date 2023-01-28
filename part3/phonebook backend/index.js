@@ -2,6 +2,30 @@ const { request } = require('express')
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
+const cors = require('cors')
+
+app.use(cors())
+app.use(express.json())
+app.use(express.static('build'))
+
+morgan.token('body', function (req, res) {
+    return req.body
+})
+
+app.use(morgan(function (tokens, req, res) {
+    const log = [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms '
+    ].join(' ')
+
+    if(req.method === 'POST'){
+        return log.concat(JSON.stringify(tokens.body(req,res)))
+    }
+    return log
+}))
 
 let persons = [
     { 
@@ -25,27 +49,6 @@ let persons = [
         id: 4
     }
 ]
-
-app.use(express.json())
-
-morgan.token('body', function (req, res) {
-    return req.body
-})
-
-app.use(morgan(function (tokens, req, res) {
-    const log = [
-        tokens.method(req, res),
-        tokens.url(req, res),
-        tokens.status(req, res),
-        tokens.res(req, res, 'content-length'), '-',
-        tokens['response-time'](req, res), 'ms '
-    ].join(' ')
-
-    if(req.method === 'POST'){
-        return log.concat(JSON.stringify(tokens.body(req,res)))
-    }
-    return log
-}))
 
 app.get('/info', (req,res) => {
     res.send(
