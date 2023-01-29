@@ -52,18 +52,11 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-
-    response.status(204).end()
+    Person
+        .findByIdAndRemove(request.params.id)
+        .then(() => response.status(204).end())
+        //.catch(error => next(error))
 })
-
-const generateId = () => {
-    const maxId = persons.length > 0
-        ? Math.floor(Math.random()*1000000)
-        : 0
-    return maxId
-}
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
@@ -80,16 +73,10 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    if (persons.find(person => body.name === person.name)) {
-        return response.status(400).json({ 
-        error: 'name must be unique' 
-        })
-    }
-
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-    }
+    })
 
     person
         .save()
