@@ -1,8 +1,11 @@
+require('dotenv').config()
 const { request } = require('express')
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
 const cors = require('cors')
+
+const Person = require('./models/person')
 
 app.use(cors())
 app.use(express.json())
@@ -27,29 +30,6 @@ app.use(morgan(function (tokens, req, res) {
     return log
 }))
 
-let persons = [
-    { 
-        name: "Arto Hellas", 
-        number: "040-123456",
-        id: 1
-    },
-    { 
-        name: "Ada Lovelace", 
-        number: "39-44-5323523",
-        id: 2
-    },
-    { 
-        name: "Dan Abramov", 
-        number: "12-43-234345",
-        id: 3
-    },
-    { 
-        name: "Mary Poppendieck", 
-        number: "39-23-6423122",
-        id: 4
-    }
-]
-
 app.get('/info', (req,res) => {
     res.send(
         `
@@ -59,19 +39,16 @@ app.get('/info', (req,res) => {
     )
 })
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons)
+app.get('/api/persons', (request, response) => {
+    Person
+        .find({})
+        .then(people => response.json(people))
 })
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+app.get('/api/persons/:id', (request, response) => {
+    Person
+        .findById(request.params.id)
+        .then(person => response.json(person))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -112,15 +89,14 @@ app.post('/api/persons', (request, response) => {
     const person = {
         name: body.name,
         number: body.number,
-        id: generateId(),
     }
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person
+        .save()
+        .then(savedPerson => response.json(savedPerson))
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

@@ -5,3 +5,12 @@ content-type: application/json
     "name": "aa",
     "number": "12345"
 }
+
+###
+POST https://phonebook-imjr.onrender.com/api/persons
+content-type: application/json
+
+{
+    "name": "HI",
+    "number": "12345"
+}
