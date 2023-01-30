@@ -8,7 +8,7 @@ mongoose.set('strictQuery', false)
 console.log('connecting to', url)
 
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
@@ -27,10 +27,10 @@ const personSchema = new mongoose.Schema({
     minlength: 8,
     validate: {
       validator: function(v) {
-        return /\d{2,3}-\d+$/.test(v);
+        return /\d{2,3}-\d+$/.test(v)
       },
-    required: true
     },
+    required: true
   }
 })
 
