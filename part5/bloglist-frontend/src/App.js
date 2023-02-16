@@ -87,16 +87,26 @@ const App = () => {
     }
   }
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
+  const handleLike = async (blog) => {
+    const likeUpdate = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1,
+      user: blog.user
+    }
+
+    await blogService.update(likeUpdate, blog.id)
+    const updatedBlogs = await blogService.getAll()
+    setBlogs(updatedBlogs)
   }
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
-
-  const handleUserChange = () => {
-    setUser(null)
+  const handleRemoveBlog = async (blog) => {
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      await blogService.remove(blog.id)
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+    }
   }
 
   return (
@@ -105,21 +115,26 @@ const App = () => {
       {user === null
         ? <LoginForm
           handleLogin={handleLogin}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
+          handleUsernameChange={(event) => setUsername(event.target.value)}
+          handlePasswordChange={(event) => setPassword(event.target.value)}
           username={username}
           password={password}
         />
         : <div>
           <h2>blogs</h2>
           <div>{user.name} logged in
-            <Logout handleUserChange={handleUserChange}/>
+            <Logout handleUserChange={() => setUser(null)}/>
           </div>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogsForm createBlog={addBlog} />
           </Togglable>
           {blogsSort.map(blog =>
-            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLike={handleLike}
+              handleRemoveBlog={handleRemoveBlog}
+              user={user} />
           )}
         </div>
       }
