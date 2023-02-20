@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { voteOf } from '../reducers/anecdoteReducer'
+import { setNotification, removeNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => {
@@ -12,9 +13,16 @@ const AnecdoteList = () => {
 
   const dispatch = useDispatch()
 
-  const sortAnecdotes = anecdotes.sort( (a,b) => b.votes - a.votes )
+  //A copy of the array is neccesary in order not to modify the state, which is not allowed
+  const copyAnecdotes = [...anecdotes]
+
+  const sortAnecdotes = copyAnecdotes.sort( (a,b) => b.votes - a.votes )
+
   const vote = (id) => {
     dispatch(voteOf(id))
+    const anecdoteToVote = sortAnecdotes.find( a => a.id === id)
+    dispatch(setNotification(`you voted '${anecdoteToVote.content}'`))
+    setTimeout( () => dispatch(removeNotification(null)), 5000)
   }
 
   return (
