@@ -1,15 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
-import blogService, { getAll, create, update, remove } from './services/blogs'
+import blogService, { getAll, create } from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'
-import BlogsForm from './components/BlogsForm'
-import Logout from './components/Logout'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useNotificationDispatch } from './NotificationContext'
 import { useUserDispatch, useUserValue } from './UserContext'
+import { getAllUsers } from './services/users'
+import Menu from './components/Menu'
 
 const App = () => {
   const queryClient = useQueryClient()
@@ -26,28 +24,16 @@ const App = () => {
     },
   })
 
-  const likeMutation = useMutation(update, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
-    },
-  })
-
-  const removeMutation = useMutation(remove, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
-    },
-  })
-
   const blogFormRef = useRef()
 
   const result = useQuery('blogs', getAll)
+  const resultUsers = useQuery('users', getAllUsers)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       dispatchUser({ type: 'USER', payload: user })
-      //setUser(user)
       blogService.setToken(user.token)
     }
   }, [])
@@ -56,9 +42,12 @@ const App = () => {
     return <div>loading data...</div>
   }
 
+  if (resultUsers.isLoading) {
+    return <div>loading data...</div>
+  }
   const blogs = result.data
 
-  const blogsSort = blogs.sort((a, b) => b.likes - a.likes)
+  const users = resultUsers.data
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -70,7 +59,6 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       dispatchUser({ type: 'USER', payload: user })
-      //setUser(user)
       setUsername('')
       setPassword('')
       dispatch({ type: 'SET', error: false, payload: 'logged' })
@@ -106,24 +94,6 @@ const App = () => {
     }
   }
 
-  const handleLike = async (blog) => {
-    const likeUpdate = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user,
-    }
-
-    likeMutation.mutate({ blogUpdated: likeUpdate, id: blog.id })
-  }
-
-  const handleRemoveBlog = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      removeMutation.mutate(blog.id)
-    }
-  }
-
   return (
     <div>
       <Notification />
@@ -137,23 +107,12 @@ const App = () => {
         />
       ) : (
         <div>
-          <h2>blogs</h2>
-          <div>
-            {user.name} logged in
-            <Logout handleUserChange={() => dispatchUser({ type: 'CLEAR' })} />
-          </div>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogsForm createBlog={addBlog} />
-          </Togglable>
-          {blogsSort.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLike={handleLike}
-              handleRemoveBlog={handleRemoveBlog}
-              user={user}
-            />
-          ))}
+          <Menu
+            blogs={blogs}
+            users={users}
+            addBlog={addBlog}
+            blogFormRef={blogFormRef}
+          />
         </div>
       )}
     </div>

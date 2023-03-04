@@ -1,47 +1,66 @@
-import { useState } from 'react'
-//import blogService from '../services/blogs'
+import { useQueryClient, useMutation } from 'react-query'
+import { useParams, useNavigate } from 'react-router'
+import { update, remove } from '../services/blogs'
+import { useUserValue } from '../UserContext'
 
-const Blog = ({ blog, handleLike, handleRemoveBlog, user }) => {
-  const [blogVisible, setBlogVisible] = useState(false)
+const Blog = ({ blogs }) => {
+  const queryClient = useQueryClient()
 
-  const hideWhenVisible = { display: blogVisible ? 'none' : '' }
-  const showWhenVisible = { display: blogVisible ? '' : 'none' }
+  const navigate = useNavigate()
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
+  const likeMutation = useMutation(update, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
 
+  const removeMutation = useMutation(remove, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
+
+  const user = useUserValue()
+  const blogId = useParams().id
+  const blog = blogs.find((blog) => blogId === blog.id)
   const blogOwner = user.username === blog.user.username ? true : false
 
+  const handleLike = async (blog) => {
+    const likeUpdate = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1,
+      user: blog.user,
+    }
+
+    likeMutation.mutate({ blogUpdated: likeUpdate, id: blog.id })
+  }
+
+  const handleRemoveBlog = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      removeMutation.mutate(blog.id)
+      navigate('/')
+    }
+  }
+
   return (
-    <div style={blogStyle} className="blog">
-      <div style={hideWhenVisible} className="hideInfo">
-        {blog.title} {blog.author}
-        <button id="showButton" onClick={() => setBlogVisible(true)}>
-          view
-        </button>
-      </div>
-      <div style={showWhenVisible} className="showInfo">
-        {blog.title} {blog.author}
-        <button onClick={() => setBlogVisible(false)}>hide</button> <br />
-        {blog.url} <br />
-        likes {blog.likes}{' '}
+    <>
+      <h2>{blog.title}</h2>
+      <a href={blog.url}>{blog.url}</a>
+      <div>
+        {blog.likes} likes
         <button id="likeButton" onClick={() => handleLike(blog)}>
           like
-        </button>{' '}
-        <br />
-        {blog.user.name} <br />
-        {blogOwner && (
-          <button id="removeButton" onClick={() => handleRemoveBlog(blog)}>
-            remove
-          </button>
-        )}
+        </button>
       </div>
-    </div>
+      <div>added by {blog.user.name}</div>
+      {blogOwner && (
+        <button id="removeButton" onClick={() => handleRemoveBlog(blog)}>
+          remove
+        </button>
+      )}
+    </>
   )
 }
 
