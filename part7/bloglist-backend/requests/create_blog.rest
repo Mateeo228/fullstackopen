@@ -1,0 +1,20 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1KUyIsImlkIjoiNjNlMjk0MGE2ZDg0OGMwY2FmNjE0NmM1IiwiaWF0IjoxNjc1Nzk3NzI2fQ.Ps4d3gMYw41usVm7yMQ2ZUa44JsbjPMU0rjM30ZwmdA
+
+{
+  "title": "THIS",
+  "author": "MJS",
+  "url" : "htmdsdl.com",
+  "likes": 20
+}
+
+###
+//valid user
+DELETE http://localhost:3003/api/blogs/63e2951b0141b444f0268cd6
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1KUyIsImlkIjoiNjNlMjk0MGE2ZDg0OGMwY2FmNjE0NmM1IiwiaWF0IjoxNjc1Nzk3NzI2fQ.Ps4d3gMYw41usVm7yMQ2ZUa44JsbjPMU0rjM30ZwmdA
+
+###
+//invalid user
+DELETE http://localhost:3003/api/blogs/63e2951b0141b444f0268cd6
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlZhbGlkIFVzZXIiLCJpZCI6IjYzZTJhYzlkMDQyYWY5NjcyYzQwNWEzNiIsImlhdCI6MTY3NTc5OTg4Mn0.jr2IfnQgNUj_8xK-cRYJXtEbBzNwmh5a9w9KwWoPOxA
