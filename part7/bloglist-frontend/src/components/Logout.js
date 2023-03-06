@@ -1,13 +1,20 @@
+import { Button } from 'react-bootstrap'
+
 const Logout = ({ handleUserChange }) => {
+  const padding = {
+    marginRight: 8,
+  }
+
   return (
-    <button
+    <Button
+      style={padding}
       onClick={() => {
         window.localStorage.removeItem('loggedBlogappUser')
         handleUserChange()
       }}
     >
-      logout
-    </button>
+      Log out
+    </Button>
   )
 }
 

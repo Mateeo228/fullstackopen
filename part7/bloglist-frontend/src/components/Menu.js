@@ -6,6 +6,7 @@ import { useUserDispatch, useUserValue } from '../UserContext'
 import Logout from './Logout'
 import Togglable from './Togglable'
 import BlogsForm from './BlogsForm'
+import { Navbar, Nav } from 'react-bootstrap'
 
 const Menu = ({ blogs, users, addBlog, blogFormRef }) => {
   const blogsSort = blogs.sort((a, b) => b.likes - a.likes)
@@ -14,41 +15,45 @@ const Menu = ({ blogs, users, addBlog, blogFormRef }) => {
   const dispatchUser = useUserDispatch()
 
   const padding = {
-    paddingRight: 5,
+    paddingLeft: 15,
   }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+  const marginTitle = {
+    marginTop: 20,
+    marginBottom: 15,
   }
-
   return (
     <Router>
-      <div>
-        <Link style={padding} to="/">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        <em>{user.name} logged in</em>
-        <Logout handleUserChange={() => dispatchUser({ type: 'CLEAR' })} />
-      </div>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Navbar.Brand href="/" style={padding}>
+            Blog Application
+          </Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/">Blogs</Nav.Link>
+            <Nav.Link href="/users">Users</Nav.Link>
+          </Nav>
+          <Nav className="mr-auto">
+            <Nav.Link as="span">{user.name} logged in</Nav.Link>
+            <Logout handleUserChange={() => dispatchUser({ type: 'CLEAR' })} />
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
-      <h2>blogs</h2>
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+      <h2 style={marginTitle}>Blogs</h2>
+      <Togglable buttonLabel="New blog" ref={blogFormRef}>
         <BlogsForm createBlog={addBlog} />
       </Togglable>
+      <br></br>
 
       <Routes>
         <Route
           path="/"
           element={blogsSort.map((blog) => (
-            <div key={blog.id} style={blogStyle}>
-              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            <div key={blog.id} className="list-group">
+              <Link to={`/blogs/${blog.id}`} className="list-group-item ">
+                {blog.title}
+              </Link>
             </div>
           ))}
         />

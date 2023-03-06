@@ -1,7 +1,7 @@
 import { useNotificationValue } from '../NotificationContext'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
-  // eslint-disable-next-line no-unused-vars
   const notification = useNotificationValue()
 
   if (notification === null) {
@@ -9,9 +9,9 @@ const Notification = () => {
   }
 
   return (
-    <div className={notification.error ? 'error' : 'success'}>
+    <Alert variant={notification.error ? 'danger' : 'success'}>
       {notification.message}
-    </div>
+    </Alert>
   )
 }
 

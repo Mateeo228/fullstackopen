@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router'
 import { update, remove } from '../services/blogs'
 import { useUserValue } from '../UserContext'
 import { createComment } from '../services/blogs'
+import { Form, Button } from 'react-bootstrap'
 
 const Blog = ({ blogs }) => {
   const queryClient = useQueryClient()
@@ -60,33 +61,54 @@ const Blog = ({ blogs }) => {
     setComment('')
   }
 
+  const margin = {
+    marginLeft: 10,
+  }
+
+  const marginTitle = {
+    marginTop: 20,
+    marginBottom: 15,
+  }
+
   return (
     <>
-      <h2>{blog.title}</h2>
-      <a href={blog.url}>{blog.url}</a>
-      <div>
-        {blog.likes} likes
-        <button id="likeButton" onClick={() => handleLike(blog)}>
-          like
-        </button>
+      <h2 style={marginTitle}>{blog.title}</h2>
+      <div className="list-group">
+        <a href={blog.url} className="list-group-item">
+          {blog.url}
+        </a>
+        <div className="list-group-item">
+          {blog.likes} likes
+          <Button
+            id="likeButton"
+            style={margin}
+            onClick={() => handleLike(blog)}
+          >
+            Like
+          </Button>
+        </div>
+        <div className="list-group-item">Added by {blog.user.name}</div>
       </div>
-      <div>added by {blog.user.name}</div>
+      <br></br>
       {blogOwner && (
-        <button id="removeButton" onClick={() => handleRemoveBlog(blog)}>
-          remove
-        </button>
+        <Button id="removeButton" onClick={() => handleRemoveBlog(blog)}>
+          Remove
+        </Button>
       )}
-      <h2>Comments</h2>
-      <form onSubmit={addComment}>
-        <input
+      <h2 style={marginTitle}>Comments</h2>
+      <Form onSubmit={addComment}>
+        <Form.Control
           value={comment}
           onChange={(event) => setComment(event.target.value)}
         />
-        <button type="submit">Add comment</button>
-      </form>
-      <ul>
+        <Button type="submit">Add comment</Button>
+      </Form>
+      <br></br>
+      <ul className="list-group">
         {blog.comments.map((blogComment, i) => (
-          <li key={i}> {blogComment} </li>
+          <li key={i} className="list-group-item">
+            {blogComment}
+          </li>
         ))}
       </ul>
     </>

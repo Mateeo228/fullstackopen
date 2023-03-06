@@ -6,10 +6,14 @@ const User = (users) => {
   return (
     <>
       <h2>{user.name}</h2>
+      <br></br>
       <h3>Added blogs</h3>
-      <ul>
+      <br></br>
+      <ul className="list-group">
         {user.blogs.map((blog, i) => (
-          <li key={i}>{blog.title}</li>
+          <li key={i} className="list-group-item">
+            {blog.title}
+          </li>
         ))}
       </ul>
     </>

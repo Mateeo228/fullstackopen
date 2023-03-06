@@ -95,7 +95,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <Notification />
       {user === null ? (
         <LoginForm
