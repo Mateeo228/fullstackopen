@@ -3,14 +3,14 @@ interface Data {
   value2: number
 }
 
-const parseArguments = (args: Array<string>) => {
+const parseArguments = (args: Array<string>): Data => {
   if (args.length < 5) throw new Error('Not enough arguments');
   
   const data = args.filter( string => {
     if (string !== args[0] && string !== args[1]){
       return true;
     } else return false;
-  })
+  });
   const areNumber = data.every( string => !isNaN(Number(string)));
   
   if (areNumber){
@@ -18,11 +18,11 @@ const parseArguments = (args: Array<string>) => {
     return {
       value1: days.map(day => Number(day)),
       value2: Number(objective)
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 interface Result {
   days: number,
@@ -34,7 +34,7 @@ interface Result {
   ratingDescription: string
 }
 
-const calculateExercises = (Arr: Array<number>, objective: number) : Result => {
+export const calculateExercises = (Arr: Array<number>, objective: number) : Result => {
   const days = Arr.length;
   const trainingDays = Arr.reduce( 
     (acum, item) => {
@@ -65,11 +65,12 @@ const calculateExercises = (Arr: Array<number>, objective: number) : Result => {
     ratingDescription: ratingDescription,
     target: objective,
     average: average };
-}
+};
 
 try {
   const { value1, value2 } = parseArguments(process.argv);
   console.log(calculateExercises(value1, value2));
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log('Error, something bad happened, message: ', e.message);
 }

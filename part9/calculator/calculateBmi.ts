@@ -11,11 +11,11 @@ const parseBmiArguments = (args: Array<string>): Values => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 
 const calculateBmi = (height: number, weight: number) : string => {
@@ -28,12 +28,13 @@ const calculateBmi = (height: number, weight: number) : string => {
     return 'Normal (Healthy weight)';
   } else if (Bmi > 24.9 && Bmi <= 29.9) {
     return 'Overweight (Unhealthy weight)';
-  } else return 'Obesity (Unhealthy weight);'
-}
+  } else return 'Obesity (Unhealthy weight)';
+};
 
 try {
   const { height, weight } = parseBmiArguments(process.argv);
   console.log(calculateBmi(height, weight));
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log('Error, something bad happened, message: ', e.message);
 }
