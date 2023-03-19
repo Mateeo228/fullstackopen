@@ -2,6 +2,7 @@ import { Patient } from "../../types";
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import patientService from '../../services/patients';
+import Entries from "./Entries";
 
 const PatientInfo = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -17,14 +18,19 @@ const PatientInfo = () => {
   };
   void fetchPatient();
 
+  if (!patient) {
+    return null;
+  }
+
   return(
     <div>
-      <h2>{patient?.name}</h2>
+      <h2>{patient.name}</h2>
       <p>
-        Gender: {patient?.gender} <br></br>
-        Ssn: {patient?.ssn} <br></br>
-        Occupation: {patient?.occupation}
+        Gender: {patient.gender} <br></br>
+        Ssn: {patient.ssn} <br></br>
+        Occupation: {patient.occupation}
       </p>
+      <Entries entries={patient.entries}/>
     </div>
   )
 }
