@@ -17,12 +17,12 @@ const OccupationalEntry = ({ entry, diagnoses }: OccupationalProps) => {
     borderRadius: 10
   }
   return(
-    <p style={OccupationStyle}>
+    <div style={OccupationStyle}>
       {entry.date} <WorkIcon /> {entry.employerName}<br></br>
       <em>{entry.description}</em> <br></br>
       <Diagnoses diagnosesList={diagnoses} diagnosesCodes={entry.diagnosisCodes} /> <br></br>
       diagnose by {entry.specialist}
-    </p>
+    </div>
   )
 }
 

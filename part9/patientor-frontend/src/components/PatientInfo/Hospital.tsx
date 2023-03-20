@@ -17,12 +17,12 @@ const Hospital = ({ entry, diagnoses }: HospitalProps) => {
     borderRadius: 10
   }
   return(
-    <p style={HospitalStyle}>
+    <div style={HospitalStyle}>
       {entry.date} <LocalHospitalIcon /> <br></br>
       <em>{entry.description}</em> <br></br>
       <Diagnoses diagnosesList={diagnoses} diagnosesCodes={entry.diagnosisCodes} /> <br></br>
       diagnose by {entry.specialist}
-    </p>
+    </div>
   )
 }
 

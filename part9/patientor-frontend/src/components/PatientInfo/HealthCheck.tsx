@@ -34,13 +34,13 @@ const HealthCheck = ({ entry, diagnoses }: HealthCheckProps) => {
   }
 
   return(
-    <p style={HealthStyle}>
+    <div style={HealthStyle}>
       {entry.date} <MedicalServicesIcon  /> <br></br>
       <em>{entry.description}</em> <br></br>
       {healthIcon(entry.healthCheckRating)} <br></br>
       <Diagnoses diagnosesList={diagnoses} diagnosesCodes={entry.diagnosisCodes} /> <br></br>
       diagnose by {entry.specialist}
-    </p>
+    </div>
   )
 }
 
