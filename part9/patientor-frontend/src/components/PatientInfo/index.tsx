@@ -30,6 +30,7 @@ const PatientInfo = () => {
         Ssn: {patient.ssn} <br></br>
         Occupation: {patient.occupation}
       </p>
+      <h3>Entries</h3>
       <Entries entries={patient.entries}/>
     </div>
   )
