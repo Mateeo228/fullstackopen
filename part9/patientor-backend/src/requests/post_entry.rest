@@ -1,0 +1,45 @@
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+  "date": "2019-05-01",
+  "specialist": "Dr Byte House",
+  "type": "HealthCheck",
+  "description": "Digital overdose, very bytestatic. Otherwise healthy.",
+  "healthCheckRating": 0
+}
+
+###
+
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+  "date": "2019-05-01",
+  "specialist": "Dr Byte House",
+  "type": "OccupationalHealthcare",
+  "description": "Digital overdose, very bytestatic. Otherwise healthy.",
+  "employerName": "FBI",
+  "sickLeave": {
+    "startDate": "2019-08-05",
+    "endDate": "2019-08-28"
+  }
+}
+
+###
+
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+  "date": "2019-05-01",
+  "specialist": "Dr Byte House",
+  "type": "Hospital",
+  "description": "Digital overdose, very bytestatic. Otherwise healthy.",
+  "employerName": "FBI",
+  "diagnosisCodes": ["S62.5"],
+  "discharge": {
+    "date": "2015-01-16",
+    "criteria": "Thumb has healed."
+  }
+}
